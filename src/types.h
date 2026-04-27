@@ -43,22 +43,22 @@ enum MoveFlags
 };
 
 // Helper
-Square make_square(File file, Rank rank)
+constexpr Square make_square(File file, Rank rank)
 {
         int square = rank * 8 + file;
         return static_cast<Square>(square);
 }
-File file_of(Square square)
+constexpr File file_of(Square square)
 {
         int file = square % 8;
         return static_cast<File>(file);
 }
-Rank rank_of(Square square)
+constexpr Rank rank_of(Square square)
 {
         int rank = square / 8;
         return static_cast<Rank>(rank);
 }
-Piece make_piece(Color color, PieceType piece_type)
+constexpr Piece make_piece(Color color, PieceType piece_type)
 {
         int piece = color * 6 + piece_type;
         return static_cast<Piece>(piece);
@@ -71,19 +71,19 @@ Piece make_piece(Color color, PieceType piece_type)
            flags (4)  |     to (6)    |   from (6)
  */
 using Move = uint16_t;
-Move make_move(Square from, Square to, MoveFlags flag)
+constexpr Move make_move(Square from, Square to, MoveFlags flag)
 {
         return static_cast<Move>((uint16_t)from | ((uint16_t)to << 6) | ((uint16_t)flag << 12));
 }
-Square move_from(Move move)
+constexpr Square move_from(Move move)
 {
         return static_cast<Square>(move & (0x3F));
 }
-Square move_to(Move move)
+constexpr Square move_to(Move move)
 {
         return static_cast<Square>((move >> 6) & 0x03F);
 }
-MoveFlags move_flags(Move move)
+constexpr MoveFlags move_flags(Move move)
 {
         return static_cast<MoveFlags>((move >> 12) & 0xF);
 }
