@@ -1,5 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
+#include <cstdint>
 // Enumeration of basic types
 enum Color { WHITE, BLACK, NUM_COLORS };
 enum PieceType { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, NO_PIECE_TYPE };
@@ -29,6 +30,17 @@ enum Rank
 {
         RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8
 };
+enum MoveFlags
+{
+        NORMAL,
+        CAPTURE,
+        EN_PASSANT,
+        CASTLE,
+        PROMO_KNIGHT,
+        PROMO_BISHOP,
+        PROMO_ROOK,
+        PROMO_QUEEN,
+};
 
 // Helper
 Square make_square(File file, Rank rank)
@@ -46,5 +58,33 @@ Rank rank_of(Square square)
         int rank = square / 8;
         return static_cast<Rank>(rank);
 }
-// TODO: add make_piece and move encoding
+Piece make_piece(Color color, PieceType piece_type)
+{
+        int piece = color * 6 + piece_type;
+        return static_cast<Piece>(piece);
+}
+
+/*
+ * Move. Alignment idea: first 6 bit for from square, second 6 bit for to square,
+ * last 4 bit for move flags.
+ * bits:  15 14 13 12 | 11 10 9 8 7 6 | 5 4 3 2 1 0
+           flags (4)  |     to (6)    |   from (6)
+ */
+using Move = uint16_t;
+Move make_move(Square from, Square to, MoveFlags flag)
+{
+        return static_cast<Move>((uint16_t)from | ((uint16_t)to << 6) | ((uint16_t)flag << 12));
+}
+Square move_from(Move move)
+{
+        return static_cast<Square>(move & (0x3F));
+}
+Square move_to(Move move)
+{
+        return static_cast<Square>((move >> 6) & 0x03F);
+}
+MoveFlags move_flags(Move move)
+{
+        return static_cast<MoveFlags>((move >> 12) & 0xF);
+}
 #endif
