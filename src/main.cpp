@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "types.h"
+
 int main()
 {
         // Test make_square and extraction

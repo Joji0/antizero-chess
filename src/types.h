@@ -1,6 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 #include <cstdint>
+
 // Enumeration of basic types
 enum Color { WHITE, BLACK, NUM_COLORS };
 enum PieceType { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, NO_PIECE_TYPE };
