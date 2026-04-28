@@ -10,7 +10,7 @@ class Position
                 Bitboard piece_bb[NUM_COLORS][NO_PIECE_TYPE] = {};
                 Bitboard occupied[NUM_COLORS] = {};
                 Bitboard all_occupied = 0;
-                Piece board[64] = {};
+                Piece board[NO_SQUARE] = {};
                 Color side_to_move = WHITE;
                 int castling_rights = 0;
                 Square en_passant_sq = NO_SQUARE;
@@ -18,10 +18,7 @@ class Position
                 int fullmove_number = 1;
                 void clear()
                 {
-                        for (int i = 0; i < 64; i++)
-                        {
-                                board[i] = NO_PIECE;
-                        }
+                        for (int i = 0; i < NO_SQUARE; i++) { board[i] = NO_PIECE; }
                         for (int c = 0; c < NUM_COLORS; c++)
                         {
                                 for (int p = 0; p < NO_PIECE_TYPE; p++) { piece_bb[c][p] = 0; }
@@ -33,6 +30,12 @@ class Position
                         halfmove_clock = 0;
                         fullmove_number = 1;
                 }
+                std::string::const_iterator parse_board(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_active_color(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_castling_rights(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_en_passant(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_halfmove(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_fullmove(const std::string &s, std::string::const_iterator it);
         public:
                 Position() { clear(); };
                 Position(const std::string& s)

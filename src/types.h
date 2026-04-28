@@ -25,11 +25,11 @@ enum Square
 };
 enum File
 {
-        FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H
+        FILE_A, FILE_B, FILE_C, FILE_D, FILE_E, FILE_F, FILE_G, FILE_H, NO_FILE
 };
 enum Rank
 {
-        RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8
+        RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, NO_RANK
 };
 enum MoveFlags
 {
@@ -41,6 +41,14 @@ enum MoveFlags
         PROMO_BISHOP,
         PROMO_ROOK,
         PROMO_QUEEN,
+        NO_FLAG
+};
+enum CastlingRights
+{
+        WHITE_OO = 1,
+        WHITE_OOO = 2,
+        BLACK_OO = 4,
+        BLACK_OOO = 8,
 };
 
 // Helper
