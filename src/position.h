@@ -1,6 +1,7 @@
 #ifndef POSITION_H
 #define POSITION_H
 #include <string>
+#include <vector>
 #include "bitboard.h"
 
 // Position for FEN
@@ -36,16 +37,26 @@ class Position
                 std::string::const_iterator parse_en_passant(const std::string &s, std::string::const_iterator it);
                 std::string::const_iterator parse_halfmove(const std::string &s, std::string::const_iterator it);
                 std::string::const_iterator parse_fullmove(const std::string &s, std::string::const_iterator it);
+                struct UndoInfo
+                {
+                        int castling_rights;
+                        Square en_passant_sq;
+                        int halfmove_clock;
+                        Piece captured_piece;
+                };
+                std::vector<UndoInfo> undo;
         public:
                 Position() { clear(); };
                 Position(const std::string& s)
                 {
                         clear();
                         set_fen(s);
+                        undo.clear();
                 }
                 inline Piece piece_on(Square sq) const { return board[sq]; }
                 inline void place_piece(Piece piece, Square sq)
                 {
+                        assert(piece != NO_PIECE);
                         PieceType piece_type = static_cast<PieceType>(piece % 6);
                         Color color = static_cast<Color>(piece / 6);
                         piece_bb[color][piece_type] |= 1ULL << sq;
@@ -67,5 +78,7 @@ class Position
                 void set_fen(const std::string& s);
                 std::string to_fen() const;
                 void print() const;
+                void make_move(Move m);
+                void unmake_move(Move m);
 };
 #endif

@@ -214,3 +214,88 @@ void Position::print() const
                 std::cout << "\n";
         }
 }
+
+void Position::make_move(Move m)
+{
+        UndoInfo undo_info = { castling_rights, en_passant_sq, halfmove_clock, NO_PIECE };
+        Square from = move_from(m), to = move_to(m);
+        MoveFlags flag = move_flag(m);
+        Piece from_piece = board[from], captured = board[to];
+        undo_info.captured_piece = captured;
+        remove_piece(from);
+        remove_piece(to);
+        place_piece(from_piece, to);
+        side_to_move = (side_to_move == WHITE ? BLACK : WHITE);
+        if (from_piece == W_PAWN || from_piece == B_PAWN || captured != NO_PIECE) halfmove_clock = 0;
+        else halfmove_clock++;
+        if (side_to_move == WHITE) fullmove_number++;
+        en_passant_sq = NO_SQUARE;
+        if ((from_piece == W_PAWN || from_piece == B_PAWN) && abs(to - from) == 16)
+        {
+                en_passant_sq = static_cast<Square>((from + to) / 2);
+        }
+        // update castling rights
+        if (from_piece == W_KING) castling_rights &= ~(WHITE_OO | WHITE_OOO);
+        if (from_piece == B_KING) castling_rights &= ~(BLACK_OO | BLACK_OOO);
+        if (from == A1) castling_rights &= ~WHITE_OOO;
+        if (from == H1) castling_rights &= ~WHITE_OO;
+        if (from == A8) castling_rights &= ~BLACK_OOO;
+        if (from == H8) castling_rights &= ~BLACK_OO;
+        if (to == A1) castling_rights &= ~WHITE_OOO;
+        if (to == H1) castling_rights &= ~WHITE_OO;
+        if (to == A8) castling_rights &= ~BLACK_OOO;
+        if (to == H8) castling_rights &= ~BLACK_OO;
+        // handle flag branching
+        if (flag == CASTLE)
+        {
+                if (to == G1) remove_piece(H1), place_piece(W_ROOK, F1);
+                else if (to == C1) remove_piece(A1), place_piece(W_ROOK, D1);
+                else if (to == G8) remove_piece(H8), place_piece(B_ROOK, F8);
+                else if (to == C8) remove_piece(A8), place_piece(B_ROOK, D8);
+                else assert(false);
+        }
+        else if (flag == EN_PASSANT)
+        {
+                if (from_piece == W_PAWN)
+                {
+                        undo_info.captured_piece = board[to - 8];
+                        remove_piece(static_cast<Square>(to - 8));
+                }
+                else if (from_piece == B_PAWN)
+                {
+                        undo_info.captured_piece = board[to + 8];
+                        remove_piece(static_cast<Square>(to + 8));
+                }
+                else assert(false);
+        }
+        else if (flag >= PROMO_KNIGHT && flag <= PROMO_QUEEN)
+        {
+                remove_piece(to);
+                PieceType promo_type = static_cast<PieceType>(flag - PROMO_KNIGHT + KNIGHT);
+                Color color = (from_piece == W_PAWN) ? WHITE : BLACK;
+                place_piece(make_piece(color, promo_type), to);
+        }
+        else assert(flag == NORMAL || flag == CAPTURE);
+        undo.push_back(undo_info);
+}
+
+void Position::unmake_move(Move m)
+{
+        assert(!undo.empty());
+        UndoInfo undo_info = undo.back();
+        undo.pop_back();
+        Square from = move_from(m), to = move_to(m);
+        MoveFlags flag = move_flag(m);
+        // TODO: implement each flag branch
+
+        castling_rights = undo_info.castling_rights;
+        en_passant_sq = undo_info.en_passant_sq;
+        halfmove_clock = undo_info.halfmove_clock;
+        Piece from_piece = board[to];
+        remove_piece(to);
+        assert(from_piece != NO_PIECE);
+        place_piece(from_piece, from);
+        if (undo_info.captured_piece != NO_PIECE) place_piece(undo_info.captured_piece, to);
+        side_to_move = (side_to_move == WHITE ? BLACK : WHITE);
+        if (side_to_move == BLACK) fullmove_number--;
+}

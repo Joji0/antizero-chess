@@ -86,13 +86,13 @@ constexpr Move make_move(Square from, Square to, MoveFlags flag)
 }
 constexpr Square move_from(Move move)
 {
-        return static_cast<Square>(move & (0x3F));
+        return static_cast<Square>(move & 0x3F);
 }
 constexpr Square move_to(Move move)
 {
-        return static_cast<Square>((move >> 6) & 0x03F);
+        return static_cast<Square>((move >> 6) & 0x3F);
 }
-constexpr MoveFlags move_flags(Move move)
+constexpr MoveFlags move_flag(Move move)
 {
         return static_cast<MoveFlags>((move >> 12) & 0xF);
 }

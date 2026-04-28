@@ -16,6 +16,6 @@ add_executable(engine
 )
 
 add_executable(tests
-        tests/test_position.cpp
+        tests/test_move.cpp
         src/position.cpp
 )
