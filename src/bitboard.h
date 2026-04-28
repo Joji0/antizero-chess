@@ -25,10 +25,7 @@ constexpr Bitboard Rank7BB = Rank1BB << 48;
 constexpr Bitboard Rank8BB = Rank1BB << 56;
 
 // Bit functions
-inline int popcount(Bitboard bb)
-{
-        return __builtin_popcountll(bb);
-}
+inline int popcount(Bitboard bb) { return __builtin_popcountll(bb); }
 inline int lsb(Bitboard bb)
 {
         assert(bb != 0);
@@ -49,7 +46,7 @@ inline int pop_lsb(Bitboard& bb)
 // Attack table for non-sliding pieces and print debugger
 extern Bitboard KnightAttacks[64];
 extern Bitboard KingAttacks[64];
-extern Bitboard PawnAttacks[2][64];
+extern Bitboard PawnAttacks[NUM_COLORS][64];
 
 void init_bitboards();
 void print_bitboard(Bitboard bb);

@@ -12,9 +12,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 add_executable(engine
         src/main.cpp
         src/bitboard.cpp
+        src/position.cpp
 )
 
 add_executable(tests
         tests/test_bitboard.cpp
+        tests/position.cpp
         src/bitboard.cpp
 )

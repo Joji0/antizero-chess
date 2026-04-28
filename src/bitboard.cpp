@@ -86,18 +86,9 @@ void print_bitboard(Bitboard bb)
                 for (int file = 0; file < 8; file++)
                 {
                         int sq = rank * 8 + file;
-                        if (bb & (1ULL << sq))
-                        {
-                                std::cout << "X ";
-                        }
-                        else
-                        {
-                                std::cout << ". ";
-                        }
-                        if (file == 7)
-                        {
-                                std::cout << "\n";
-                        }
+                        if (bb & (1ULL << sq)) std::cout << "X ";
+                        else std::cout << ". ";
+                        if (file == 7) std::cout << "\n";
                 }
         }
 }
