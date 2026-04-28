@@ -63,9 +63,9 @@ Bitboard init_pawn(Square s, Color c)
         else
         {
                 // right capture (from black POV)
-                attacks |= (bb >> 7) & ~FileHBB;
+                attacks |= (bb >> 9) & ~FileHBB;
                 // left capture
-                attacks |= (bb >> 9) & ~FileABB;
+                attacks |= (bb >> 7) & ~FileABB;
         }
         return attacks;
 }
