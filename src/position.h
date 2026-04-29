@@ -80,5 +80,6 @@ class Position
                 void print() const;
                 void make_move(Move m);
                 void unmake_move(Move m);
+                int get_castling_rights() { return castling_rights; }
 };
 #endif

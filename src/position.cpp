@@ -215,6 +215,7 @@ void Position::print() const
         }
 }
 
+// make move from current position
 void Position::make_move(Move m)
 {
         UndoInfo undo_info = { castling_rights, en_passant_sq, halfmove_clock, NO_PIECE };
@@ -279,6 +280,7 @@ void Position::make_move(Move m)
         undo.push_back(undo_info);
 }
 
+// unmake the last move
 void Position::unmake_move(Move m)
 {
         assert(!undo.empty());
@@ -286,16 +288,74 @@ void Position::unmake_move(Move m)
         undo.pop_back();
         Square from = move_from(m), to = move_to(m);
         MoveFlags flag = move_flag(m);
-        // TODO: implement each flag branch
-
+        if (flag == CASTLE)
+        {
+                Piece king = board[to];
+                assert(king == W_KING || king == B_KING);
+                remove_piece(to);
+                place_piece(king, from);
+                if (to == G1)
+                {
+                        assert(board[F1] == W_ROOK && board[H1] == NO_PIECE);
+                        remove_piece(F1);
+                        place_piece(W_ROOK, H1);
+                }
+                else if (to == C1)
+                {
+                        assert(board[D1] == W_ROOK && board[A1] == NO_PIECE);
+                        remove_piece(D1);
+                        place_piece(W_ROOK, A1);
+                }
+                else if (to == G8)
+                {
+                        assert(board[F8] == B_ROOK && board[H8] == NO_PIECE);
+                        remove_piece(F8);
+                        place_piece(B_ROOK, H8);
+                }
+                else if (to == C8)
+                {
+                        assert(board[D8] == B_ROOK && board[A8] == NO_PIECE);
+                        remove_piece(D8);
+                        place_piece(B_ROOK, A8);
+                }
+                else assert(false);
+        }
+        else if (flag == EN_PASSANT)
+        {
+                Piece from_piece = board[to];
+                remove_piece(to);
+                place_piece(from_piece, from);
+                if (from_piece == W_PAWN)
+                {
+                        assert(undo_info.captured_piece == B_PAWN);
+                        place_piece(B_PAWN, static_cast<Square>(to - 8));
+                }
+                else if (from_piece == B_PAWN)
+                {
+                        assert(undo_info.captured_piece == W_PAWN);
+                        place_piece(W_PAWN, static_cast<Square>(to + 8));
+                }
+                else assert(false);
+        }
+        else if (flag >= PROMO_KNIGHT && flag <= PROMO_QUEEN)
+        {
+                remove_piece(to);
+                if (rank_of(to) == RANK_8) place_piece(W_PAWN, from);
+                else place_piece(B_PAWN, from);
+                if (undo_info.captured_piece != NO_PIECE) place_piece(undo_info.captured_piece, to);
+        }
+        else if (flag == NORMAL || flag == CAPTURE)
+        {
+                Piece from_piece = board[to];
+                assert(from_piece != NO_PIECE);
+                remove_piece(to);
+                place_piece(from_piece, from);
+                if (undo_info.captured_piece != NO_PIECE) place_piece(undo_info.captured_piece, to);
+        }
+        else assert(false);
         castling_rights = undo_info.castling_rights;
         en_passant_sq = undo_info.en_passant_sq;
         halfmove_clock = undo_info.halfmove_clock;
-        Piece from_piece = board[to];
-        remove_piece(to);
-        assert(from_piece != NO_PIECE);
-        place_piece(from_piece, from);
-        if (undo_info.captured_piece != NO_PIECE) place_piece(undo_info.captured_piece, to);
         side_to_move = (side_to_move == WHITE ? BLACK : WHITE);
         if (side_to_move == BLACK) fullmove_number--;
 }

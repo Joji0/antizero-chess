@@ -18,4 +18,5 @@ add_executable(engine
 add_executable(tests
         tests/test_move.cpp
         src/position.cpp
+        src/bitboard.cpp
 )
