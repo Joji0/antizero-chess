@@ -65,8 +65,11 @@ vcpkg_installed/
 *.dwo
 
 # test output & cache
-Testing/
+tests/
 .cache/
 
 # build
 build/
+
+# bits
+bits/
