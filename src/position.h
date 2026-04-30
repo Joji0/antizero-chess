@@ -81,5 +81,6 @@ class Position
                 void make_move(Move m);
                 void unmake_move(Move m);
                 int get_castling_rights() { return castling_rights; }
+                Square get_en_passant_sq() { return en_passant_sq; }
 };
 #endif
