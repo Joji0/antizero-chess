@@ -16,7 +16,8 @@ add_executable(engine
 )
 
 add_executable(tests
-        tests/test_move.cpp
-        src/position.cpp
+        tests/test_magics.cpp
         src/bitboard.cpp
+        src/position.cpp
+        src/magics.cpp
 )

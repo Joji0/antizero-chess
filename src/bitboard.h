@@ -50,4 +50,5 @@ extern Bitboard PawnAttacks[NUM_COLORS][64];
 
 void init_bitboards();
 void print_bitboard(Bitboard bb);
+
 #endif
