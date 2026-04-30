@@ -80,7 +80,14 @@ class Position
                 void print() const;
                 void make_move(Move m);
                 void unmake_move(Move m);
+                Bitboard get_piece_bb(Color color, PieceType piece_type) { return piece_bb[color][piece_type]; }
+                Bitboard get_occupied(Color color) { return occupied[color]; }
+                Bitboard get_all_occupied() { return all_occupied; }
+                Piece get_board(Square sq) { return board[sq]; }
+                Color get_side_to_move() { return side_to_move; }
                 int get_castling_rights() { return castling_rights; }
                 Square get_en_passant_sq() { return en_passant_sq; }
+                int get_halfmove_clock() { return halfmove_clock; }
+                int get_fullmove_number() { return fullmove_number; }
 };
 #endif
