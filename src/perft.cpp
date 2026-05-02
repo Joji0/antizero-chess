@@ -52,6 +52,7 @@ int main()
 {
         init_bitboards();
         init_magics();
+        // all test results are taken from https://www.chessprogramming.org/Perft_Results
         PerftTest tests[] = {
                 {
                         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
