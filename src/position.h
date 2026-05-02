@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "bitboard.h"
+#include "magics.h"
 
 // Position for FEN
 class Position
@@ -89,5 +90,14 @@ class Position
                 Square get_en_passant_sq() { return en_passant_sq; }
                 int get_halfmove_clock() { return halfmove_clock; }
                 int get_fullmove_number() { return fullmove_number; }
+                bool is_square_attacked(Square sq, Color by)
+                {
+                        if (PawnAttacks[by == WHITE ? BLACK : WHITE][sq] & piece_bb[by][PAWN]) return true;
+                        if (KnightAttacks[sq] & piece_bb[by][KNIGHT]) return true;
+                        if (bishop_attacks(sq, all_occupied) & (piece_bb[by][BISHOP] | piece_bb[by][QUEEN])) return true;
+                        if (rook_attacks(sq, all_occupied) & (piece_bb[by][ROOK] | piece_bb[by][QUEEN])) return true;
+                        if (KingAttacks[sq] & piece_bb[by][KING]) return true;
+                        return false;
+                }
 };
 #endif

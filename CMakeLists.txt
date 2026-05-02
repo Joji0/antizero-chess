@@ -10,9 +10,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # TODO: this optimization does not work on Windows, need to config that somehow in the future
 
 add_executable(engine
-        src/main.cpp
+        # src/main.cpp
         src/bitboard.cpp
         src/position.cpp
+        src/magics.cpp
+        src/movegen.cpp
+        src/perft.cpp
 )
 
 add_executable(tests

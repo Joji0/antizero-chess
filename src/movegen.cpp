@@ -169,12 +169,14 @@ void generate_king_moves(Position& pos, MoveList& moves)
         {
                 if (castling_rights & WHITE_OO)
                 {
-                        if (pos.get_board(F1) == NO_PIECE && pos.get_board(G1) == NO_PIECE)
+                        if (pos.get_board(F1) == NO_PIECE && pos.get_board(G1) == NO_PIECE &&
+                            !pos.is_square_attacked(E1, BLACK) && !pos.is_square_attacked(F1, BLACK) && !pos.is_square_attacked(G1, BLACK))
                                 moves.add(make_move(E1, G1, CASTLE));
                 }
                 if (castling_rights & WHITE_OOO)
                 {
-                        if (pos.get_board(B1) == NO_PIECE && pos.get_board(C1) == NO_PIECE && pos.get_board(D1) == NO_PIECE)
+                        if (pos.get_board(B1) == NO_PIECE && pos.get_board(C1) == NO_PIECE && pos.get_board(D1) == NO_PIECE &&
+                            !pos.is_square_attacked(E1, BLACK) && !pos.is_square_attacked(D1, BLACK) && !pos.is_square_attacked(C1, BLACK))
                                 moves.add(make_move(E1, C1, CASTLE));
                 }
         }
@@ -182,12 +184,14 @@ void generate_king_moves(Position& pos, MoveList& moves)
         {
                 if (castling_rights & BLACK_OO)
                 {
-                        if (pos.get_board(F8) == NO_PIECE && pos.get_board(G8) == NO_PIECE)
+                        if (pos.get_board(F8) == NO_PIECE && pos.get_board(G8) == NO_PIECE &&
+                            !pos.is_square_attacked(E8, WHITE) && !pos.is_square_attacked(F8, WHITE) && !pos.is_square_attacked(G8, WHITE))
                                 moves.add(make_move(E8, G8, CASTLE));
                 }
                 if (castling_rights & BLACK_OOO)
                 {
-                        if (pos.get_board(B8) == NO_PIECE && pos.get_board(C8) == NO_PIECE && pos.get_board(D8) == NO_PIECE)
+                        if (pos.get_board(B8) == NO_PIECE && pos.get_board(C8) == NO_PIECE && pos.get_board(D8) == NO_PIECE &&
+                            !pos.is_square_attacked(E8, WHITE) && !pos.is_square_attacked(D8, WHITE) && !pos.is_square_attacked(C8, WHITE))
                                 moves.add(make_move(E8, C8, CASTLE));
                 }
         }
@@ -203,10 +207,21 @@ void generate_king_moves(Position& pos, MoveList& moves)
 
 void generate_moves(Position& pos, MoveList& moves)
 {
-        generate_pawn_moves(pos, moves);
-        generate_knight_moves(pos, moves);
-        generate_bishop_moves(pos, moves);
-        generate_rook_moves(pos, moves);
-        generate_queen_moves(pos, moves);
-        generate_king_moves(pos, moves);
+        MoveList pseudo;
+        generate_pawn_moves(pos, pseudo);
+        generate_knight_moves(pos, pseudo);
+        generate_bishop_moves(pos, pseudo);
+        generate_rook_moves(pos, pseudo);
+        generate_queen_moves(pos, pseudo);
+        generate_king_moves(pos, pseudo);
+        Color us = pos.get_side_to_move();
+        for (auto& pseudo_move : pseudo)
+        {
+                pos.make_move(pseudo_move);
+                if (!pos.is_square_attacked(static_cast<Square>(lsb(pos.get_piece_bb(us, KING))), us == WHITE ? BLACK : WHITE))
+                {
+                        moves.add(pseudo_move);
+                }
+                pos.unmake_move(pseudo_move);
+        }
 }
