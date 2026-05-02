@@ -27,6 +27,7 @@ Bitboard init_knight(Square s)
         attacks |= (bb >> 17) & ~FileHBB;
         return attacks;
 }
+
 Bitboard init_king(Square s)
 {
         Bitboard attacks = 0;
@@ -49,6 +50,7 @@ Bitboard init_king(Square s)
         attacks |= (bb >> 9) & ~FileHBB;
         return attacks;
 }
+
 Bitboard init_pawn(Square s, Color c)
 {
         Bitboard attacks = 0;
@@ -69,6 +71,7 @@ Bitboard init_pawn(Square s, Color c)
         }
         return attacks;
 }
+
 void init_bitboards()
 {
         for (int i = 0; i < 64; i++)
@@ -79,6 +82,7 @@ void init_bitboards()
                 PawnAttacks[BLACK][i] = init_pawn((Square)i, BLACK);
         }
 }
+
 void print_bitboard(Bitboard bb)
 {
         for (int rank = 7; rank >= 0; rank--)
