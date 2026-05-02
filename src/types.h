@@ -96,4 +96,7 @@ constexpr MoveFlags move_flag(Move move)
 {
         return static_cast<MoveFlags>((move >> 12) & 0xF);
 }
+
+// Mate score
+constexpr int MATE_SCORE = 100000;
 #endif
