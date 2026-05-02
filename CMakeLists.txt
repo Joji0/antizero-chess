@@ -19,8 +19,11 @@ add_executable(engine
 )
 
 add_executable(tests
-        tests/test_magics.cpp
+        tests/test_evalsearch.cpp
         src/bitboard.cpp
         src/position.cpp
         src/magics.cpp
+        src/movegen.cpp
+        src/evaluate.cpp
+        src/search.cpp
 )

@@ -32,12 +32,12 @@ class Position
                         halfmove_clock = 0;
                         fullmove_number = 1;
                 }
-                std::string::const_iterator parse_board(const std::string &s, std::string::const_iterator it);
-                std::string::const_iterator parse_active_color(const std::string &s, std::string::const_iterator it);
-                std::string::const_iterator parse_castling_rights(const std::string &s, std::string::const_iterator it);
-                std::string::const_iterator parse_en_passant(const std::string &s, std::string::const_iterator it);
-                std::string::const_iterator parse_halfmove(const std::string &s, std::string::const_iterator it);
-                std::string::const_iterator parse_fullmove(const std::string &s, std::string::const_iterator it);
+                std::string::const_iterator parse_board(const std::string& s, std::string::const_iterator it);
+                std::string::const_iterator parse_active_color(const std::string& s, std::string::const_iterator it);
+                std::string::const_iterator parse_castling_rights(const std::string& s, std::string::const_iterator it);
+                std::string::const_iterator parse_en_passant(const std::string& s, std::string::const_iterator it);
+                std::string::const_iterator parse_halfmove(const std::string& s, std::string::const_iterator it);
+                std::string::const_iterator parse_fullmove(const std::string& s, std::string::const_iterator it);
                 struct UndoInfo
                 {
                         int castling_rights;
@@ -98,6 +98,12 @@ class Position
                         if (rook_attacks(sq, all_occupied) & (piece_bb[by][ROOK] | piece_bb[by][QUEEN])) return true;
                         if (KingAttacks[sq] & piece_bb[by][KING]) return true;
                         return false;
+                }
+                bool is_in_check()
+                {
+                        Square king_sq = static_cast<Square>(lsb(piece_bb[side_to_move][KING]));
+                        Color enemy = (side_to_move == WHITE) ? BLACK : WHITE;
+                        return is_square_attacked(king_sq, enemy);
                 }
 };
 #endif
