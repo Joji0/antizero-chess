@@ -1,9 +1,11 @@
-#include <iostream>
-#include <cassert>
-#include "types.h"
+#include "bitboard.h"
+#include "magics.h"
+#include "uci.h"
 
 int main()
 {
-        std::cout << "This is antizero-chess created using the C++ language" << std::endl;
+        init_bitboards();
+        init_magics();
+        uci_loop();
         return 0;
 }

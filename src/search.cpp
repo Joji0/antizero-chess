@@ -43,7 +43,7 @@ Move search(Position& pos, int max_depth)
                                 best_move = move;
                         }
                 }
-                std::cout << "depth " << depth << " score " << best_score << std::endl;
+                std::cout << "info depth " << depth << " score cp " << best_score << std::endl;
         }
         return best_move;
 }

@@ -24,7 +24,9 @@ class Position
                         for (int c = 0; c < NUM_COLORS; c++)
                         {
                                 for (int p = 0; p < NO_PIECE_TYPE; p++) { piece_bb[c][p] = 0; }
+                                occupied[c] = 0;
                         }
+                        undo.clear();
                         side_to_move = WHITE;
                         all_occupied = 0;
                         castling_rights = 0;
